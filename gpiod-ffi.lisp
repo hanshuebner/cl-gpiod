@@ -310,8 +310,8 @@
   (chipname-size :long)
   (offset (:pointer :int)))
 
-(defcfun ("chip-open" chip-open) :pointer
-  (name :string))
+(defcfun ("gpiod_chip_open" chip-open) :pointer
+  (path :string))
 
 (defcfun ("gpiod_chip_open_by_name" chip-open-by-name) :pointer
   (name :string))
