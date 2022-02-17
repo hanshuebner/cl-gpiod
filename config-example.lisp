@@ -24,8 +24,9 @@
 
 (defun test ()
   (cl-gpiod:open-chip apple2-rpi-io-gpio)
-  (setf (data-out) #x23)
   (loop until (in-write))
+  (setf (data-out) #x23)
+  (setf (out-write) t)
   (loop until (in-read))
   (format t "data-in: ~A~%" (data-in))
   (setf (out-read) t))
