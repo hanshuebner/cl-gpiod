@@ -21,24 +21,24 @@
   (gethash port-name *port-handles*))
 
 (defun direction-to-line-request-direction (direction)
-  (ecase direction
-    (:input 'gpiod:+line-request-direction-input+)
-    (:output 'gpiod:+line-request-direction-output+)))
+  (or (find-symbol (format nil "+~A-~A+" '#:line-request-direction direction) :gpiod)
+      (error "Unknown line direction ~A" direction)))
+
+(defun flag-to-line-request-flag (flag)
+  (or (find-symbol (format nil "+~A-~A+" '#:line-request-flag flag) :gpiod)
+      (error "Unknown line flag ~A" flag)))
 
 (defun flags-to-line-request-flags (flags)
-  `(logior ,@(loop for flag in flags
-                   collect (ecase flag
-                             (:pull-up 'gpiod:+line-request-flag-bias-pull-up+)
-                             (:pull-down 'gpiod:+line-request-flag-bias-pull-down+)))))
+  `(logior ,@ (mapcar #'flag-to-line-request-flag flags)))
 
 (defun make-line-init (line direction flags)
-  `(lambda (chip consumer-name)
-     (let ((handle (check (gpiod:chip-get-line chip ,line))))
-       (cffi:with-foreign-object (config 'gpiod:line-request-config)
-         (cffi:with-foreign-slots ((consumer request-type flags) config 'gpiod:line-request-config)
-           (setf consumer consumer-name
-                 request-type ,(direction-to-line-request-direction direction)
-                 flags ,(flags-to-line-request-flags flags)))
+  `(lambda (chip consumer)
+     (let ((handle (gpiod:chip-get-line chip ,line)))
+       (cffi:with-foreign-object (config '(:struct gpiod:line-request-config))
+         (cffi:with-foreign-slots ((gpiod:consumer gpiod:request-type gpiod:flags) config (:struct gpiod:line-request-config))
+           (setf gpiod:consumer consumer
+                 gpiod:request-type ,(direction-to-line-request-direction direction)
+                 gpiod:flags ,(flags-to-line-request-flags flags)))
          (check (gpiod:line-request handle config 0)))
        handle)))
 
@@ -49,7 +49,7 @@
        :setter `(defun (setf ,name) (value)
                   (gpiod:line-set-value (port-handle ,name) (if value 1 0)))
        :getter `(defun ,name ()
-                  (gpiod:line-get-value (port-handle ,name))))))
+                  (= (gpiod:line-get-value (port-handle ,name)) 1)))))
 
 (defmacro define-gpio (name &key chip-name ports)
   `(progn

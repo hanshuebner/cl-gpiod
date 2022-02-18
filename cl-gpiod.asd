@@ -17,4 +17,5 @@
   :long-description ""
 
   :depends-on (:alexandria :cffi)
-  :components ((:file "gpiod-ffi")))
+  :components ((:file "gpiod-ffi")
+               (:file "cl-gpiod")))

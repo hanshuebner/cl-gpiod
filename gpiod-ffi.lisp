@@ -143,7 +143,20 @@
    #:line-iter-free
    #:line-iter-next
    #:version-string
-   #:line-request-config))
+   #:line-request-config
+   #:consumer
+   #:request-type
+   #:flags
+   #:fd
+   #:event
+   #:line-bulk
+   #:lines
+   #:num-lines
+   #:line-event
+   #:ts
+   #:event-type
+   #:tv-sec
+   #:tv-usec))
 
 (in-package :gpiod-ffi)
 

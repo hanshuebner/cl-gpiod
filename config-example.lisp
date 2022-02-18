@@ -13,10 +13,10 @@
                    :direction :input)
           (in-write :line 23
                     :direction :input
-                    :flags (:pull-down :active-low))
+                    :flags (:bias-pull-down :active-low))
           (in-read :line 18
                    :direction :input
-                   :flags (:pull-down :active-low))
+                   :flags (:bias-pull-down :active-low))
           (out-read :line 25
                     :direction :output)
           (out-write :line 24
