@@ -7,7 +7,7 @@
 
 (cl-gpiod:define-gpio apple2-rpi-io-gpio
   :chip-name "gpiochip0"
-  :lines ((data-out :lines (4 17 27 22 10 9 11 5)
+  :ports ((data-out :lines (4 17 27 22 10 9 11 5)
                     :direction :output)
           (data-in :lines (6 13 19 26 21 20 16 12)
                    :direction :input)

@@ -142,7 +142,8 @@
    #:line-iter-new
    #:line-iter-free
    #:line-iter-next
-   #:version-string))
+   #:version-string
+   #:line-request-config))
 
 (in-package :gpiod-ffi)
 
