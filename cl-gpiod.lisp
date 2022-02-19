@@ -89,7 +89,7 @@
                                      (check (gpiod:line-get-value-bulk bulk values))
                                      (let ((value 0))
                                        (dotimes (i (gpiod:line-bulk-num-lines bulk))
-                                         (setf (ldb (byte 1 i) value) (cffi:mem-aref :int values i)))
+                                         (setf (ldb (byte 1 i) value) (cffi:mem-aref values :int i)))
                                        value))))))))
 
 (defmacro define-gpio (definition-name &key chip-name ports)

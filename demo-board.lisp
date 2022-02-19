@@ -7,8 +7,11 @@
 
 (cl-gpiod:define-gpio demo-board
   :chip-name "gpiochip0"
-  :ports ((data-out :lines (23 24 25)
+  :ports ((data-out :lines (25 24 23 22)
                     :direction :output)
+          (data-in :lines (21 20 19 16)
+                   :direction :input
+                   :flags (:bias-pull-up :active-low))
           (button-1 :line 17
                     :direction :input
                     :flags (:bias-pull-up :active-low))
@@ -23,13 +26,14 @@
     (gpiod:chip-close *chip*))
   (setf *chip* (cl-gpiod:open-chip demo-board "demo")))
 
+(defun wait-for-key ()
+  (loop until (button-1))
+  (sleep .5)
+  (loop until (not (button-1))))
+
 (defun test ()
   (loop
-    (setf (data-out) 3)
-    (loop until (button-1))
-    (setf (data-out) 2)
-    (loop until (button-2))
-    (setf (data-out) 1)
-    (loop until (button-1))
-    (setf (data-out) 0)
-    (loop until (button-2))))
+    (format t "Data in: ~A~%" (data-in)) (finish-output)
+    (dotimes (i (data-in))
+      (setf (data-out) (1+ i))
+      (wait-for-key))))
