@@ -11,7 +11,7 @@ except for the deprecated functions.  All functions and macros are
 provided in Common Lisp syntax, i.e. underscores are replaced by minus
 signs, upper case macro definitions are turned to lower case constants
 with leading and trailing plus signs, the "gpio_" prefix is removed to
-be replaced by the GPIOD: package alias.   Thus,
+be replaced by the `GPIOD:` package alias.   Thus,
 `gpiod_chip_open_by_name` becomes `gpio:chip-open-by-name`.
 
 ## cl-gpiod high-level interface
