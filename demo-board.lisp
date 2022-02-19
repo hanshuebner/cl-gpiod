@@ -21,7 +21,7 @@
 (defun open-chip ()
   (when (boundp '*chip*)
     (gpiod:chip-close *chip*))
-  (setf *chip* (cl-gpiod:open-chip 'demo-board "demo")))
+  (setf *chip* (cl-gpiod:open-chip demo-board "demo")))
 
 (defun test ()
   (setf (data-out) 3)

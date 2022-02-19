@@ -51,7 +51,27 @@ Bits 17 and 18 are defined as input ports.  They can be read like so:
     (when (button-1) ...)
 
 Before the accessors can be used, the GPIO chip must be opened using
-`cl-gpiod:open-chip`.
+`cl-gpiod:open-chip`.  A "consumer name" needs to be provided which
+will be shown in `gpioinfo` to help identify users of GPIO bits:
+
+    (cl-gpiod:open-chip demo-board "demo")
+
+```
+apple2-dev 197_% gpioinfo                                                                                                               ±[●●][main]
+gpiochip0 - 54 lines:
+    line   0:      unnamed       unused   input  active-high
+[...]
+    line  17:      unnamed       "demo"   input   active-low [used pull-up]
+    line  18:      unnamed       "demo"   input   active-low [used pull-up]
+    line  19:      unnamed       unused   input  active-high
+    line  20:      unnamed       unused   input  active-high
+    line  21:      unnamed       unused   input  active-high
+    line  22:      unnamed       unused  output  active-high
+    line  23:      unnamed       "demo"  output  active-high [used]
+    line  24:      unnamed       "demo"  output  active-high [used]
+    line  25:      unnamed       "demo"  output  active-high [used]
+    line  26:      unnamed       unused   input  active-high
+```
 
 
 # TODO
