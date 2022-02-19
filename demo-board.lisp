@@ -24,8 +24,12 @@
   (setf *chip* (cl-gpiod:open-chip demo-board "demo")))
 
 (defun test ()
-  (setf (data-out) 3)
-  (loop until (button-1))
-  (setf (data-out) 2)
-  (loop until (button-2))
-  (setf (data-out) 1))
+  (loop
+    (setf (data-out) 3)
+    (loop until (button-1))
+    (setf (data-out) 2)
+    (loop until (button-2))
+    (setf (data-out) 1)
+    (loop until (button-1))
+    (setf (data-out) 0)
+    (loop until (button-2))))

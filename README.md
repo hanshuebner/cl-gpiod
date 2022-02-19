@@ -76,7 +76,10 @@ gpiochip0 - 54 lines:
 
 # TODO
 
- - Verify bit order
  - Event interface
  - Better documentation
  - Better open/close experience
+
+# Links
+
+ - [Intro to libgpio](https://lloydrochester.com/post/hardware/libgpiod-intro-rpi/)
