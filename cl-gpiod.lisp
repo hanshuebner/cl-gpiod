@@ -18,7 +18,8 @@
        ,status)))
 
 (defun port-handle (port-name)
-  (gethash port-name *port-handles*))
+  (or (gethash port-name *port-handles*)
+      (error "port ~A not found or not initialized" port-name)))
 
 (defun direction-to-line-request-direction (direction)
   (or (find-symbol (format nil "+~A-~A+" '#:line-request-direction direction) :gpiod)

@@ -166,13 +166,13 @@
 (use-foreign-library libgpiod)
 
 (defmacro gpiod-bit (nr)
-  `(ash 1 (- ,nr)))
+  `(ash 1 ,nr))
 
 (defconstant +ctxless-flag-open-drain+ (gpiod-bit 0))
 (defconstant +ctxless-flag-open-source+ (gpiod-bit 1))
 (defconstant +ctxless-flag-bias-disable+ (gpiod-bit 2))
 (defconstant +ctxless-flag-bias-pull-down+ (gpiod-bit 3))
-(defconstant +ctxless-flag-bias-pull-down+ (gpiod-bit 4))
+(defconstant +ctxless-flag-bias-pull-up+ (gpiod-bit 4))
 
 (defcfun ("gpiod_ctxless_get_value" ctxless-get-value) :int
   (device :string)
