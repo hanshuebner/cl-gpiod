@@ -19,7 +19,7 @@ be replaced by the `gpiod:` package alias.   Thus,
 A `define-gpio` macro is provided, which is used to define all the
 bits that an application wants to use on a single GPIO chip.  It
 introduces the concept of "ports", which can either be single or
-groups of arbitray bits.  For each port, getter and setter functions
+groups of arbitrary bits.  For each port, getter and setter functions
 are defined.
 
 Single-bit ports are accessed as booleans when reading or writing.
