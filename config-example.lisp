@@ -23,7 +23,7 @@
                      :direction :output)))
 
 (defun test ()
-  (cl-gpiod:open-chip apple2-rpi-io-gpio)
+  (cl-gpiod:open-chip 'apple2-rpi-io-gpio "test")
   (loop until (in-write))
   (setf (data-out) #x23)
   (setf (out-write) t)

@@ -57,7 +57,7 @@
        (gpiod:line-bulk-add bulk (chip-get-line chip line)))
      (cffi:with-foreign-object (%default-vals :int (length ',lines))
        (dotimes (i (length ',lines))
-         (set (cffi:mem-aref %default-vals i) (if (logbitp i ,(or default-val 0)) 1 0)))
+         (setf (cffi:mem-aref %default-vals :int i) (if (logbitp i ,(or default-val 0)) 1 0)))
        (cffi:with-foreign-object (config '(:struct gpiod:line-request-config))
          ,(make-init-line-request-config 'config 'consumer direction flags)
          (check (gpiod:line-request-bulk bulk config %default-vals))))
@@ -65,7 +65,7 @@
 
 (defstruct port name init setter getter)
 
-(defun parse-port (name &key line lines direction flags default-val)
+(defun parse-port (name &key line lines direction flags (default-val 0))
   (cond
     (line (make-port :name name
                      :init (make-line-init line direction flags default-val)
@@ -79,7 +79,7 @@
                                  (let ((bulk (port-handle ',name)))
                                    (cffi:with-foreign-object (values :int (gpiod:line-bulk-num-lines bulk))
                                      (dotimes (i (gpiod:line-bulk-num-lines bulk))
-                                       (setf (cffi:mem-aref values i) (ldb (byte 1 i) value)))
+                                       (setf (cffi:mem-aref values :int i) (ldb (byte 1 i) value)))
                                      (check (gpiod:line-set-value-bulk bulk values)))))
                       :getter `(defun ,name ()
                                  (let ((bulk (port-handle ',name)))
@@ -87,7 +87,7 @@
                                      (check (gpiod:line-get-value-bulk bulk values))
                                      (let ((value 0))
                                        (dotimes (i (gpiod:line-bulk-num-lines bulk))
-                                         (setf (ldb (byte 1 i) value) (cffi:mem-aref values i)))
+                                         (setf (ldb (byte 1 i) value) (cffi:mem-aref :int values i)))
                                        value))))))))
 
 (defmacro define-gpio (definition-name &key chip-name ports)
@@ -95,12 +95,13 @@
      (defvar ,definition-name)
      ,@(let ((ports (mapcar (lambda (port) (apply #'parse-port port)) ports)))
          `((defmethod open-chip ((name (eql ',definition-name)) consumer)
-            (let ((chip (gpiod:chip-open-by-name ,chip-name)))
+             (let ((chip (gpiod:chip-open-by-name ,chip-name)))
               (cffi:with-foreign-string (consumer consumer)
                 ,@(mapcar (lambda (port)
                             `(setf (gethash ',(port-name port) *port-handles*)
                                    ,(port-init port)))
-                          ports))))
+                          ports))
+               chip))
            ,@(mapcar #'port-setter ports)
            ,@(mapcar #'port-getter ports)))))
 
