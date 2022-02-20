@@ -31,13 +31,16 @@ Here is a short example of the high-level interface:
 ```
 (cl-gpiod:define-gpio demo-board
   :chip-name "gpiochip0"
-  :ports ((data-out :lines (23 24 25)
+  :ports ((data-out :lines (25 24 23 22)
                     :direction :output)
+          (data-in :lines (21 20 19 16)
+                   :direction :input
+                   :flags (:bias-pull-up :active-low))
           (button-1 :line 17
-                    :direction :input
+                    :event :rising-edge
                     :flags (:bias-pull-up :active-low))
           (button-2 :line 18
-                    :direction :input
+                    :event :falling-edge
                     :flags (:bias-pull-up :active-low))))
 ```
 
@@ -46,9 +49,16 @@ Here, bits 23, 24 and 25 are grouped as multi-bit output port named
 
     (setf (data-out) 3)
 
-Bits 17 and 18 are defined as input ports.  They can be read like so:
+Bits 17 and 18 are defined as input ports with edge detection
+capability.  They can be read like so:
 
     (when (button-1) ...)
+
+Also, it is possible to wait for the configured level transition to
+occur using the `cl-gpiod:wait-for-event` and
+`cl-gpiod:wait-for-event-with-timeout` functions:
+
+    (cl-gpiod:wait-for-event-with-timeout 'button-1 0.5)
 
 Before the accessors can be used, the GPIO chip must be opened using
 `cl-gpiod:open-chip`.  A "consumer name" needs to be provided which
@@ -76,7 +86,6 @@ gpiochip0 - 54 lines:
 
 # TODO
 
- - Event interface
  - Better documentation
  - Better open/close experience
 

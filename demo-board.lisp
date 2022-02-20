@@ -13,10 +13,10 @@
                    :direction :input
                    :flags (:bias-pull-up :active-low))
           (button-1 :line 17
-                    :direction :input
+                    :event :rising-edge
                     :flags (:bias-pull-up :active-low))
           (button-2 :line 18
-                    :direction :input
+                    :event :falling-edge
                     :flags (:bias-pull-up :active-low))))
 
 (defvar *chip*)
@@ -26,14 +26,12 @@
     (gpiod:chip-close *chip*))
   (setf *chip* (cl-gpiod:open-chip demo-board "demo")))
 
-(defun wait-for-key ()
-  (loop until (button-1))
-  (sleep .5)
-  (loop until (not (button-1))))
-
 (defun test ()
+  (format t "Press and release button 2 to start: ") (finish-output)
+  (cl-gpiod:wait-for-event 'button-2)
+  (terpri) (finish-output)
   (loop
     (format t "Data in: ~A~%" (data-in)) (finish-output)
     (dotimes (i (data-in))
       (setf (data-out) (1+ i))
-      (wait-for-key))))
+      (cl-gpiod:wait-for-event-with-timeout 'button-1 1.5))))

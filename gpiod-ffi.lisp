@@ -156,7 +156,7 @@
    #:ts
    #:event-type
    #:tv-sec
-   #:tv-usec))
+   #:tv-nsec))
 
 (in-package :gpiod-ffi)
 
@@ -266,7 +266,7 @@
 
 (defcstruct timespec
   (tv-sec :long)
-  (tv-usec :long))
+  (tv-nsec :long))
 
 (defcfun ("gpiod_ctxless_event_monitor" ctxless-event-monitor) :int
   (device :string)
